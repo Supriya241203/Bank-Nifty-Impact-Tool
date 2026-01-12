@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Nifty Impact Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f4f4f4; }
+    input { width: 80px; }
+    .result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>📈 Bank Nifty Impact Calculator</h2>
+  <p>Enter % price changes for each stock to estimate Bank Nifty movement.</p>
+  <table id="impactTable">
+    <thead>
+      <tr>
+        <th>Bank</th>
+        <th>Weight (%)</th>
+        <th>Price Change (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table rows will be populated by JavaScript -->
+    </tbody>
+  </table>
+  <div class="result" id="result">Bank Nifty Impact: --</div>  <script>
+    const bankData = [
+      { name: "HDFC Bank", weight: 25 },
+      { name: "ICICI Bank", weight: 20 },
+      { name: "Axis Bank", weight: 12 },
+      { name: "Kotak Bank", weight: 10 },
+      { name: "SBI", weight: 9 },
+      { name: "IndusInd Bank", weight: 8 },
+      { name: "AU Bank", weight: 5 },
+      { name: "PNB", weight: 4 },
+      { name: "IDFC First", weight: 3 },
+      { name: "Bandhan Bank", weight: 2 },
+      { name: "Federal Bank", weight: 1.5 },
+      { name: "Bank of Baroda", weight: 1.5 }
+    ];
+
+    const tableBody = document.querySelector("#impactTable tbody");
+
+    bankData.forEach((bank, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${bank.name}</td>
+        <td>${bank.weight}</td>
+        <td><input type="number" step="0.01" value="0" onchange="calculateImpact()" id="input-${index}"></td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+    function calculateImpact() {
+      const indexLevel = 54000;
+      let totalImpact = 0;
+      bankData.forEach((bank, index) => {
+        const input = document.getElementById(`input-${index}`).value;
+        const priceChange = parseFloat(input) || 0;
+        totalImpact += (priceChange * bank.weight);
+      });
+      const points = (indexLevel * (totalImpact / 100));
+      document.getElementById("result").innerText = `Bank Nifty Impact: ${points.toFixed(2)} points (${totalImpact.toFixed(2)}%)`;
+    }
+  </script></body>
+</html>
